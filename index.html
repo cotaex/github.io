@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>こたえっくす (cotaEX) | Web3漫画家 ポートフォリオ</title>
+    
+    <!-- Tailwind CSS を読み込みます -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts を読み込みます -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- アイコンライブラリ (Lucide) を読み込みます -->
+    <script src="https://unpkg.com/lucide-react@latest/dist/lucide-react.js"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* セクションの背景画像スタイル */
+        #hero, #works, #contact {
+            position: relative;
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8)), url('images/hero-bg.jpg') no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        /* フォントをNoto Sans JPに変更し、よりクールな印象に */
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f3f4f6; /* クールなライトグレーを背景に */
+            color: #1f2937; /* ダークグレーを文字色に */
+        }
+        /* 見出しのフォントは丸みのあるものを継続 */
+        h1, h2, h3 {
+             font-family: 'M PLUS Rounded 1c', sans-serif;
+        }
+        /* 見出しのスタイル */
+        h2 {
+            font-weight: 800;
+            font-size: 2.25rem; /* 36px */
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+        /* 見出しの下線をラベンダー系のグラデーションに変更 */
+        h2::after {
+            content: '';
+            display: block;
+            width: 60%;
+            height: 4px;
+            background: linear-gradient(90deg, #A78BFA, #7C3AED); /* ラベンダーからパープルへ */
+            margin: 0.5rem auto 0;
+            border-radius: 2px;
+        }
+        /* スクロールをスムーズにします */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* 作品カードのホバーエフェクト */
+        .work-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(167, 139, 250, 0.2);
+        }
+        /* ボタンのスタイルをラベンダー系に変更 */
+        .btn-primary {
+            background: linear-gradient(90deg, #A78BFA, #8B5CF6);
+            color: #ffffff;
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+        /* セクションごとの背景装飾 */
+        .section-bg {
+            position: relative;
+            overflow: hidden;
+        }
+        .section-bg::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background-color: rgba(167, 139, 250, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .section-bg::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 300px;
+            height: 300px;
+            background-color: rgba(124, 58, 237, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ヘッダー -->
+    <header id="header" class="bg-white/80 backdrop-blur-md fixed top-0 left-0 right-0 z-50 shadow-sm transition-all duration-300">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-extrabold text-gray-800">
+                cotaEX<span class="text-violet-600">.</span>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="text-gray-600 hover:text-violet-600 transition">私について</a>
+                <a href="#works" class="text-gray-600 hover:text-violet-600 transition">作品紹介</a>
+                <a href="#activity" class="text-gray-600 hover:text-violet-600 transition">活動内容</a>
+                <a href="#contact" class="text-gray-600 hover:text-violet-600 transition">お問い合わせ</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            </button>
+        </div>
+        <!-- モバイルメニュー -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#about" class="block py-2 text-gray-600 hover:text-violet-600">私について</a>
+            <a href="#works" class="block py-2 text-gray-600 hover:text-violet-600">作品紹介</a>
+            <a href="#activity" class="block py-2 text-gray-600 hover:text-violet-600">活動内容</a>
+            <a href="#contact" class="block py-2 text-gray-600 hover:text-violet-600">お問い合わせ</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- ヒーローセクション -->
+        <section id="hero" class="pt-32 pb-20 md:pt-48 md:pb-32 text-center section-bg">
+            <div class="container mx-auto px-6 relative z-10">
+                <!-- メインビジュアル画像 -->
+                <img src="images/main/main-visual.jpg" alt="こたえっくすさんのメインイラスト" class="w-48 h-48 md:w-64 md:h-64 mx-auto rounded-full shadow-2xl mb-8 border-4 border-white object-cover">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-gray-800 leading-tight">
+                    こたえっくす <span class="text-sm md:text-lg"></span>
+                </h1>
+                <p class="text-xl md:text-2xl text-violet-600 font-bold mt-2 mb-6">Web3漫画家 </p>
+                <p class="max-w-2xl mx-auto text-gray-600 mb-10">
+                    「楽しさ」と「共創」をテーマに、<br>キャラクターの魅力でコミュニティを繋ぐ創作活動をしています。
+                </p>
+                <a href="#works" class="btn-primary">作品を見る</a>
+            </div>
+        </section>
+
+        <!-- 私について (About) -->
+        <section id="about" class="py-20 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2>私について</h2>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16 max-w-4xl mx-auto">
+                    <!-- アバター画像 -->
+                    <img src="images/profile/avatar.jpg" alt="こたえっくすさんのアバター" class="w-40 h-40 rounded-full shadow-lg object-cover">
+                    <div class="text-left">
+                        <p class="text-lg mb-4 leading-relaxed">
+                            商業出版社での執筆経験を経て、現在はCryptoNinjaを中心としたNFTコミュニティで活動する「Web3漫画家」です。
+                        </p>
+                        <p class="mb-4 leading-relaxed">
+                            大切にしているのは、ファンや子どもたちを巻き込みながら、みんなで一緒に作品を作り上げていくこと。創作を通して「楽しさ」と「共創」の輪を広げ、子どもたちが安心して創造性を育める居場所を作ることを目指しています。
+                        </p>
+                        <p class="font-bold text-violet-700">
+                            Ninjaオーナー#008凪紗 / CNPプリンスキャラクターデザイン担当
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 作品紹介 (Works) -->
+        <section id="works" class="py-20 section-bg">
+            <div class="container mx-auto px-6 relative z-10">
+                <h2 class="mb-12">作品紹介</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- 作品カード 1 -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 work-card">
+                        <img src="images/hapinin.jpg" alt="ハピ忍！の表紙" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2">『ハピ忍！』</h3>
+                            <p class="text-gray-600 text-sm mb-4">CryptoNinjaのキャラクター達が登場する、ほのぼの4コマ漫画のまとめ本です。各キャラの可愛らしさを詰め込みました。</p>
+                            <a href="https://cotaexx.booth.pm/" target="_blank" rel="noopener noreferrer" class="text-violet-600 hover:underline font-semibold">BOOTHで見る &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- 作品カード 2 -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 work-card">
+                        <img src="images/cnp-prince.jpg" alt="CNPプリンスの漫画" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2">『CNPプリンス』関連漫画</h3>
+                            <p class="text-gray-600 text-sm mb-4">Web3アイドル企画「CNPプリンス」の原作・漫画を担当。企画立ち上げから携わり、キャラクターたちの物語を紡いでいます。</p>
+                            <a href="https://cnp-prince.com/" target="_blank" rel="noopener noreferrer" class="text-violet-600 hover:underline font-semibold">公式サイトで読む &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- 作品カード 3 -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 work-card">
+                        <img src="images/nin-nin-ninja.jpg" alt="にんにんにんじゃ！絵本プロジェクト" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2">『にんにんにんじゃ！』絵本プロジェクト</h3>
+                            <p class="text-gray-600 text-sm mb-4">NinjaDAOの仲間と立ち上げた絵本プロジェクト。『おとのおともだち』など、読み聞かせ動画や歌も制作しています。</p>
+                            <a href="https://lit.link/cotaex" target="_blank" rel="noopener noreferrer" class="text-violet-600 hover:underline font-semibold">詳細を見る &rarr;</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 活動内容 (Activity) -->
+        <section id="activity" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="mb-12">活動内容</h2>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                    
+                    <div class="text-center p-6 bg-violet-50 rounded-lg">
+                        <div id="icon-manga" class="w-16 h-16 mx-auto mb-4 bg-violet-500 text-white rounded-full flex items-center justify-center"></div>
+                        <h3 class="font-bold text-lg mb-2">漫画制作</h3>
+                        <p class="text-sm text-gray-600">4コマ漫画やストーリー漫画の原作・作画を手掛けています。</p>
+                    </div>
+                    <div class="text-center p-6 bg-violet-50 rounded-lg">
+                        <div id="icon-illust" class="w-16 h-16 mx-auto mb-4 bg-violet-500 text-white rounded-full flex items-center justify-center"></div>
+                        <h3 class="font-bold text-lg mb-2">イラスト制作</h3>
+                        <p class="text-sm text-gray-600">キャラクターデザイン、絵本、グッズ用イラストなどを制作します。</p>
+                    </div>
+                    <div class="text-center p-6 bg-violet-50 rounded-lg">
+                        <div id="icon-nft" class="w-16 h-16 mx-auto mb-4 bg-violet-500 text-white rounded-full flex items-center justify-center"></div>
+                        <h3 class="font-bold text-lg mb-2">NFTアート</h3>
+                        <p class="text-sm text-gray-600">CryptoNinja関連のNFTパーツデザインや、NFTプロジェクトに参加しています。</p>
+                    </div>
+                    <div class="text-center p-6 bg-violet-50 rounded-lg">
+                        <div id="icon-director" class="w-16 h-16 mx-auto mb-4 bg-violet-500 text-white rounded-full flex items-center justify-center"></div>
+                        <h3 class="font-bold text-lg mb-2">Webディレクション</h3>
+                        <p class="text-sm text-gray-600">公式アニメのWebディレクターなど、企画や制作進行も担当します。</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- お問い合わせ (Contact) -->
+        <section id="contact" class="py-20 section-bg">
+            <div class="container mx-auto px-6 text-center relative z-10">
+                <h2 class="mb-6">お問い合わせ</h2>
+                <p class="max-w-xl mx-auto mb-8">
+                    お仕事のご依頼、コラボレーションのご相談など、お気軽にご連絡ください。<br>
+                    まずはX（旧Twitter）のDMからご連絡いただけるとスムーズです。
+                </p>
+               
+                <a href="https://x.com/cotaex417" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                    Xで連絡する
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-gray-400">&copy; 2025 cotaEX (こたえっくす). All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script type="text/babel">
+        function initializeApp() {
+            // 必要なライブラリがすべて読み込まれているか確認します
+            if (typeof lucide === 'undefined' || typeof ReactDOM === 'undefined' || typeof React === 'undefined') {
+                setTimeout(initializeApp, 50); // 50ミリ秒後にもう一度試します
+                return;
+            }
+
+            // --- ここからライブラリ読み込み後の処理 ---
+
+            // Lucide アイコンをレンダリングするコンポーネント
+            const Icon = ({ name, color, size }) => {
+                const LucideIcon = lucide[name];
+                return <LucideIcon color={color} size={size} />;
+            };
+
+            // 各アイコンをレンダリング
+            ReactDOM.render(<Icon name="BookOpen" color="white" size={32} />, document.getElementById('icon-manga'));
+            ReactDOM.render(<Icon name="Paintbrush" color="white" size={32} />, document.getElementById('icon-illust'));
+            ReactDOM.render(<Icon name="Sparkles" color="white" size={32} />, document.getElementById('icon-nft'));
+            ReactDOM.render(<Icon name="Clapperboard" color="white" size={32} />, document.getElementById('icon-director'));
+            
+            ReactDOM.render(<Icon name="Twitter" color="#8B5CF6" size={32} />, document.getElementById('icon-twitter'));
+            ReactDOM.render(<Icon name="Link" color="#8B5CF6" size={32} />, document.getElementById('icon-link'));
+            ReactDOM.render(<Icon name="ShoppingBag" color="#8B5CF6" size={32} />, document.getElementById('icon-booth'));
+
+            // モバイルメニューの開閉
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // モバイルメニューのリンクをクリックしたらメニューを閉じる
+            const mobileMenuLinks = document.querySelectorAll('#mobile-menu a');
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                   mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // スクロールでヘッダーの背景を変更
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('py-2');
+                    header.classList.remove('py-3');
+                } else {
+                    header.classList.add('py-3');
+                    header.classList.remove('py-2');
+                }
+            });
+
+            // 要素が画面内に入ったらフェードイン
+            const animatedElements = document.querySelectorAll('.work-card, #about div, #activity > div > div');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in');
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            animatedElements.forEach(el => {
+                el.style.opacity = 0;
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                observer.observe(el);
+            });
+        }
+
+        // 初期化処理を開始
+        initializeApp();
+    </script>
+</body>
+</html>
